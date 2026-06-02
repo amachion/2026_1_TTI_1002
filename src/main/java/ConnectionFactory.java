@@ -3,7 +3,7 @@ import java.sql.DriverManager;
 
 public class ConnectionFactory {
     private String usuario = "root";
-    private String senha = "123456"; //tinCTrom
+    private String senha = "tinCTrom"; //tinCTrom
     private String host = "localhost";
     private String porta = "3306";
     private String bd = "db_spotfy";
