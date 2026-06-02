@@ -114,29 +114,45 @@ public class Musica {
             e.printStackTrace();
         }
     }
-    public String listar () {
-        String sql = "SELECT * FROM tb_musica";
+    public static String listar () {
+        String sql = "SELECT * FROM tb_musica ORDER BY titulo";
         ConnectionFactory factory = new ConnectionFactory();
         try (Connection c = factory.obtemConexao()) {
             PreparedStatement ps = c.prepareStatement(sql);
             //para receber o resultado, temos um conjunto de resultados
             ResultSet rs = ps.executeQuery();
             //iterar sobre o conjunto
-            String saidaFinal = "";
+            StringBuilder sb = new StringBuilder();
             while (rs.next()) {
                 String titulo = rs.getString("titulo");
                 int duracao = rs.getInt("duracao");
                 double avaliacao = rs.getDouble("avaliacao");
-                String saida = String.format ("Titulo: %s, Duração: %d, Avaliação: %.2f\n",
-                        titulo, duracao, avaliacao);
-                saidaFinal += saida;
+                //sb.append(String.format ("Titulo: %s, Duração: %d, Avaliação: %.2f\n", titulo, duracao, avaliacao));
+                sb.append("Titulo: "); sb.append(titulo);
+                sb.append(", Duracao: "); sb.append(duracao);
+                sb.append(", Avaliacao: "); sb.append(avaliacao);
+                sb.append("\n");
             }
-            return saidaFinal;
+            return sb.length() > 0 ? sb.toString() : "set list vazio";
         }
         catch (Exception e) {
             e.printStackTrace();
         }
         return "set list vazio";
+    }
+    static boolean existe (String titulo) {//package safe
+        String sql = "SELECT titulo FROM tb_musica WHERE titulo = ?";
+        ConnectionFactory factory  = new ConnectionFactory();
+        try (Connection c = factory.obtemConexao()) {
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setString(1, titulo);
+            ResultSet rs = ps.executeQuery();
+            return rs.next(); 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
 
